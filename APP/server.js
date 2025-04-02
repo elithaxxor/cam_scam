@@ -1,28 +1,33 @@
-const express = require('express'); // Import express module
-const axios = require('axios'); // Import axios module for making HTTP requests
-const cors = require('cors'); // Import cors module to enable Cross-Origin Resource Sharing
+const express = require('express');
+const puppeteer = require('puppeteer');
+const cors = require('cors');
 
-const app = express(); // Create an instance of express
+const app = express();
+app.use(cors());
 
-app.use(cors()); // Enable CORS for your frontend
-
-// Proxy endpoint to fetch EarthCam data
 app.get('/api/cameras', async (req, res) => {
-  const targetUrl = 'https://www.earthcam.com/network/'; // URL to fetch camera data from
-
+  let browser;
   try {
-    const response = await axios.get(targetUrl, {
-      headers: {
-        'User-Agent': 'YourApp/1.0 (contact@yourapp.com)', // Identify your scraper
-      },
+    // Launch Puppeteer (headless by default)
+    browser = await puppeteer.launch({
+      headless: true, // Run in headless mode (no GUI)
+      args: ['--no-sandbox', '--disable-setuid-sandbox'], // Required for some environments
     });
 
-    res.send(response.data); // Send raw HTML to the frontend
+    const page = await browser.newPage();
+    await page.goto('https://www.earthcam.com/network/', {
+      waitUntil: 'networkidle2', // Wait for dynamic content to load
+    });
+
+    const html = await page.content();
+    res.send(html);
   } catch (error) {
-    console.error('Proxy error:', error.message); // Log the error message to the console
-    res.status(500).json({ error: 'Failed to fetch camera data' }); // Send error response to the frontend
+    console.error('Puppeteer error:', error);
+    res.status(500).json({ error: 'Failed to fetch cameras' });
+  } finally {
+    if (browser) await browser.close(); // Always close the browser
   }
 });
 
-const PORT = 3001; // Define the port on which the server will run
-app.listen(PORT, () => console.log(`Proxy server running on http://localhost:${PORT}`)); // Start the server and listen on the defined port
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Proxy running on port ${PORT}`));
