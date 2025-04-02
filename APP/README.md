@@ -1,1 +1,4 @@
 -
+```bash
+  node server.js
+```
