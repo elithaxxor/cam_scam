@@ -122,6 +122,7 @@ const PublicCameras = () => {
 };
 
 export default PublicCameras;
+```
 
 ```bash
   node server.js
