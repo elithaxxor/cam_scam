@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Access Hidden Camera</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input, select, button {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Access Hidden Camera</h1>
+        <form method="post">
+            <label for="cameraIP">Camera IP:</label>
+            <input type="text" id="cameraIP" name="cameraIP" placeholder="Enter Camera IP" required>
+            
+            <label for="protocol">Protocol:</label>
+            <select id="protocol" name="protocol" required>
+                <option value="http">HTTP</option>
+                <option value="rtsp">RTSP</option>
+                <option value="rtmp">RTMP</option>
+                <option value="hls">HLS</option>
+            </select>
+            
+            <button type="submit">Access</button>
+        </form>
+    </div>
+</body>
+</html>
