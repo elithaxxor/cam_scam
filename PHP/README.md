@@ -69,37 +69,6 @@ The `cam_scam.php` file contains both the PHP logic for processing the form subm
 
 The PHP section at the top handles the form submission, constructs the appropriate URL based on the selected protocol, and outputs an HTML video element to display the live feed.
 
-```php
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $cameraIP = $_POST["cameraIP"];
-    $protocol = $_POST["protocol"];
-    $url = "";
-
-    switch ($protocol) {
-        case "http":
-            $url = "http://$cameraIP";
-            break;
-        case "rtsp":
-            $url = "rtsp://$cameraIP:554/stream";
-            break;
-        case "rtmp":
-            $url = "rtmp://$cameraIP/live/stream";
-            break;
-        case "hls":
-            $url = "http://$cameraIP/hls/stream.m3u8";
-            break;
-    }
-
-    echo "<h2>Live Feed from Camera:</h2>";
-    echo "<video width='600' controls>
-            <source src='$url' type='video/$protocol'>
-            Your browser does not support the video tag.
-          </video>";
-}
-?>
-```
-
 #### HTML Form
 
 The HTML section provides a form for users to input the camera IP and select the protocol. The form is styled to be user-friendly and responsive.
@@ -169,3 +138,7 @@ The HTML section provides a form for users to input the camera IP and select the
 </body>
 </html>
 ```
+
+## Current Status
+
+As of the latest update on **2025-04-03 04:04:09 (UTC)**, the `cam_scam.php` script is functional and ready for deployment.
