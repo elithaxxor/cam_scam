@@ -48,6 +48,12 @@ app.get('/api/cameras', async (req, res) => {
   }
 });
 
+
+// Allow the port to be configured via the PORT environment variable.
+// Default to 3001 so it aligns with the React app configuration.
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Proxy running on port ${PORT}`));
+
 // Shodan API endpoint with caching
 app.get('/api/shodan', async (req, res) => {
   try {
@@ -67,3 +73,4 @@ const basicAuth = require('basic-auth');
 
 const WIGLE_USERNAME = 'kXbnhyS8FUXZIm2ZNTHISmiYP8IHCUVD'; // Assuming username is the key provided
 const WIGLE_PASSWORD = 'kXbnhyS8FUXZIm2ZNTHISmiYP8IHCUVD'; // Assuming password is the same key for now
+

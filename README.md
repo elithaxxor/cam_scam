@@ -36,6 +36,13 @@ To install and set up this project, follow these steps:
     npm install
     ```
 
+3. Start the proxy server (defaults to port 3001):
+    ```sh
+    PORT=3001 node APP/server.js
+    ```
+
+   You can configure a different port by setting the `PORT` environment variable.
+
 ## Usage
 
 To use the `PublicCameras` component, import it into your React application and include it in your component tree:
@@ -55,10 +62,14 @@ function App() {
 export default App;
 ```
 
-Run the application:
+Run the application (ensure the proxy server is also running):
 ```sh
 npm start
 ```
+
+The React components use the `REACT_APP_PROXY_URL` environment variable to
+determine where the camera data is fetched from. It defaults to
+`http://localhost:3001/api/cameras` if not specified.
 
 ## Dependencies
 

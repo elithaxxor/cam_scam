@@ -1,24 +1,38 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $cameraIP = $_POST["cameraIP"];
-    $protocol = $_POST["protocol"];
+    // Sanitize input to avoid HTML/JS injection
+    $cameraIP = filter_input(INPUT_POST, 'cameraIP', FILTER_SANITIZE_STRING);
+    $protocol = filter_input(INPUT_POST, 'protocol', FILTER_SANITIZE_STRING);
+
+    // Basic validation for allowed protocols
+    $allowed = ["http", "rtsp", "rtmp", "hls"];
+    if (!in_array($protocol, $allowed, true)) {
+        $protocol = "http";
+    }
+
+    $cameraIPEscaped = htmlspecialchars($cameraIP, ENT_QUOTES, 'UTF-8');
     $url = "";
 
     switch ($protocol) {
         case "http":
-            $url = "http://$cameraIP";
+            $url = "http://$cameraIPEscaped";
             break;
         case "rtsp":
-            $url = "rtsp://$cameraIP:554/stream";
+            $url = "rtsp://$cameraIPEscaped:554/stream";
             break;
         case "rtmp":
-            $url = "rtmp://$cameraIP/live/stream";
+            $url = "rtmp://$cameraIPEscaped/live/stream";
             break;
         case "hls":
-            $url = "http://$cameraIP/hls/stream.m3u8";
+            $url = "http://$cameraIPEscaped/hls/stream.m3u8";
             break;
     }
 
+    $protocolEscaped = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
+
+    echo "<h2>Live Feed from Camera:</h2>";
+    echo "<video width='600' controls>\n".
+         "    <source src='$url' type='video/$protocolEscaped'>\n".
     echo "<h2>Live Feed from Camera:</h2>";
     echo "<video width='600' controls>\n".
          "    <source src='$url' type='video/$protocol'>\n".

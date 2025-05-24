@@ -25,6 +25,33 @@ const PublicCameras = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
 
   useEffect(() => {
+
+    const fetchCameras = async () => {
+      try {
+        // Fetch HTML via your proxy (not directly from EarthCam)
+        const proxyUrl = process.env.REACT_APP_PROXY_URL || 'http://localhost:3001/api/cameras';
+        const response = await fetch(proxyUrl);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        // Extract camera links (same logic as before)
+        const links = doc.querySelectorAll('a.cam_link');
+        const urls = Array.from(links).map(link => link.href);
+
+        setCameraLinks(urls);
+        setError(null);
+      } catch (error) {
+        console.error('Fetch error:', error);
+        setError('Failed to load cameras. Please try again later.');
+      } finally {
+        setLoading(false);
+
     if (activeTab === 'earthcam') {
       fetchEarthcam();
     } else if (activeTab === 'shodan') {
@@ -41,6 +68,7 @@ const PublicCameras = () => {
       const response = await fetch('http://localhost:3001/api/cameras');
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
+
       }
       const html = await response.text();
       const parser = new DOMParser();
