@@ -34,11 +34,11 @@ Cam Scam is a unique OSINT tool designed to scam LLMs and reverse engineer ways 
     npm install
     ```
 
-4. Set up and run the proxy server (make sure the proxy server is running on `http://localhost:3001`):
+4. Set up and run the proxy server (defaults to `http://localhost:3001`):
     ```sh
-    # Example for starting a simple proxy server
-    npm run start-proxy
+    PORT=3001 node server.js
     ```
+    You can change the port by setting the `PORT` environment variable.
 
 5. Start the React application:
     ```sh
@@ -73,7 +73,7 @@ const PublicCameras = () => {
     const fetchCameras = async () => {
       try {
         // Fetch HTML via your proxy (not directly from EarthCam)
-        const proxyUrl = 'http://localhost:3001/api/cameras';
+        const proxyUrl = process.env.REACT_APP_PROXY_URL || 'http://localhost:3001/api/cameras';
         const response = await fetch(proxyUrl);
         
         if (!response.ok) {
@@ -198,7 +198,16 @@ Fetches the HTML content from EarthCam's network page and returns it.
 
 ## Environment Variables
 
+
 - `PORT`: (Optional) Port number on which the server will run. Defaults to **3001**.
+=======
+
+- `PORT`: (Optional) Port number on which the server will run. Defaults to 3001.
+
+- `PORT`: (Optional) Port number on which the proxy server will run. Defaults to 3001.
+- `REACT_APP_PROXY_URL`: URL used by the React app to fetch camera data. Defaults to `http://localhost:3001/api/cameras`.
+
+
 
 ## Code Overview
 
