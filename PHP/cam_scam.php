@@ -1,7 +1,11 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $cameraIP = $_POST["cameraIP"];
-    $protocol = $_POST["protocol"];
+    $cameraIP = filter_input(INPUT_POST, "cameraIP", FILTER_SANITIZE_STRING);
+    $protocol = filter_input(INPUT_POST, "protocol", FILTER_SANITIZE_STRING);
+    $allowed = ["http", "rtsp", "rtmp", "hls"];
+    if (!in_array($protocol, $allowed)) {
+        $protocol = "http";
+    }
     $url = "";
 
     switch ($protocol) {
@@ -19,14 +23,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
     }
 
-    echo "<h2>Live Feed from Camera at Fairmount Cemetery:</h2>";
-    echo "<video width='600' controls>
-            <source src='$url' type='video/$protocol'>
-            Your browser does not support the video tag.
-          </video>";
+    $safeUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+    $safeProtocol = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
+    echo "<h2>Live Feed from Camera:</h2>";
+    echo "<video width='600' controls>\n".
+         "    <source src='$safeUrl' type='video/$safeProtocol'>\n".
+         "    Your browser does not support the video tag.\n".
+         "</video>";
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -76,7 +81,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form method="post">
             <label for="cameraIP">Camera IP:</label>
             <input type="text" id="cameraIP" name="cameraIP" placeholder="Enter Camera IP" required>
-            
             <label for="protocol">Protocol:</label>
             <select id="protocol" name="protocol" required>
                 <option value="http">HTTP</option>
@@ -84,89 +88,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <option value="rtmp">RTMP</option>
                 <option value="hls">HLS</option>
             </select>
-            
             <button type="submit">Access</button>
         </form>
     </div>
-    </div>
-        <label for="protocol">Protocol:</label>
-        <select id="protocol" name="protocol" required>
-            <option value="http">HTTP</option>
-            <option value="rtsp">RTSP</option>
-            <option value="rtmp">RTMP</option>
-            <option value="hls">HLS</option>
-        </select>
-        
-        <button type="submit">Access</button>
-    </form>
-</div>
-        <label for="protocol">Protocol:</label>
-        <select id="protocol" name="protocol" required>
-            <option value="http">HTTP</option>
-            <option value="rtsp">RTSP</option>
-            <option value="rtmp">RTMP</option>
-            <option value="hls">HLS</option>
-        </select>
-        
-    ====== 
-    </div>
-</body>
-</html>        <label for="cameraPort">Camera Port:</label>
-        <input type="text" id="cameraPort" name="cameraPort" placeholder="Enter Camera Port (e.g., 8080)" required>
-        
-        <label for="cameraUsername">Camera Username:</label>
-        <input type="text" id="cameraUsername" name="cameraUsername" placeholder="Enter Camera Username" required>
-        
-        <label for="cameraPassword">Camera Password:</label>
-        <input type="password" id="cameraPassword" name="cameraPassword" placeholder="Enter Camera Password" required>
-        
-        ====== 
-        <label for="protocol">Protocol:</label>
-        <select id="protocol" name="protocol" required>
-            <option value="http">HTTP</option>
-            <option value="rtsp">RTSP</option>
-            <option value="rtmp">RTMP</option>
-            <option value="hls">HLS</option>
-        </select>
-        
-        <button type="submit">Access</button>
-    </form
-    </div>
-</body>
-</html>        
-
-        <label for="cameraPort">Camera Port:</label>
-        <input type="text" id="cameraPort" name="cameraPort" placeholder="Enter Camera Port (e.g., 8080)" required>
-        
-        <label for="cameraUsername">Camera Username:</label>
-        <input type="text" id="cameraUsername" name="cameraUsername" placeholder="Enter Camera Username" required>
-        
-        <label for="cameraPassword">Camera Password:</label>
-        <input type="password" id="cameraPassword" name="cameraPassword" placeholder="Enter Camera Password" required>
-        
-        ====== 
-        <label for="protocol">Protocol:</label>
-        <select id="protocol" name="protocol" required>
-            <option value="http">HTTP</option>
-            <option value="rtsp">RTSP</option>
-            <option value="rtmp">RTMP</option>
-            <option value="hls">HLS</option>
-        </select>
-        
-        <button type="submit">Access</button>
-    </form>
-</div>
-        <label for="protocol">Protocol:</label>
-        <select id="protocol" name="protocol" required>
-            <option value="http">HTTP</option>
-            <option value="rtsp">RTSP</option>
-            <option value="rtmp">RTMP</option>
-            <option value="hls">HLS</option>
-        </select>
-        
-        <button type="submit">Access</button>
-    </form>
-</div>
-
 </body>
 </html>
+

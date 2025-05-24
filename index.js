@@ -29,7 +29,7 @@ const PublicCameras = () => {
 
         fetchCameras();
     }, []);
-l
+
     return (
         <div>
             <h1>Public Cameras</h1>

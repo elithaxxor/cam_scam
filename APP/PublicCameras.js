@@ -4,12 +4,13 @@ const PublicCameras = () => {
   const [cameraLinks, setCameraLinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchCameras = async () => {
       try {
         // Fetch HTML via your proxy (not directly from EarthCam)
-        const proxyUrl = 'http://localhost:3001/api/cameras';
+        const proxyUrl = process.env.REACT_APP_PROXY_URL || 'http://localhost:3001/api/cameras';
         const response = await fetch(proxyUrl);
         
         if (!response.ok) {
@@ -37,15 +38,25 @@ const PublicCameras = () => {
     fetchCameras();
   }, []);
 
+  const filteredLinks = cameraLinks.filter(link =>
+    link.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   // Render states: loading, error, or success
   return (
     <div>
       <h1>Public Cameras</h1>
+      <input
+        type="text"
+        placeholder="Search cameras"
+        value={searchTerm}
+        onChange={e => setSearchTerm(e.target.value)}
+      />
       {loading && <p>Loading cameras...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {!loading && !error && (
         <ul>
-          {cameraLinks.map((link, index) => (
+          {filteredLinks.map((link, index) => (
             <li key={index}>
               <a href={link} target="_blank" rel="noopener noreferrer">
                 {link}
@@ -56,6 +67,6 @@ const PublicCameras = () => {
       )}
     </div>
   );
-};
+}; 
 
 export default PublicCameras;
