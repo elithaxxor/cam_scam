@@ -14,6 +14,7 @@ The `cam_scam.php` file is a PHP script that allows users to access and view liv
 - **Dynamic URL Construction**: Constructs the appropriate URL based on the selected protocol and the provided camera IP address.
 - **Live Feed Display**: Displays the live video feed within the web interface using HTML5 video elements.
 - **User-Friendly Interface**: Provides a simple and responsive web form for users to input camera details.
+- **Input Sanitization**: Sanitizes all user-provided values to prevent injection attacks.
 
 ## Prerequisites
 
