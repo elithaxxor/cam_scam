@@ -5,7 +5,8 @@ const PublicCameras = () => {
 
     useEffect(() => {
         const fetchCameras = async () => {
-            const url = "https://www.earthcam.com/network/";
+            // Use the proxy server to avoid CORS issues when fetching data
+            const url = "http://localhost:3001/api/cameras";
 
             try {
                 // Fetch the HTML content of the page
@@ -29,7 +30,7 @@ const PublicCameras = () => {
 
         fetchCameras();
     }, []);
-l
+
     return (
         <div>
             <h1>Public Cameras</h1>
