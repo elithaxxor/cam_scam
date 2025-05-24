@@ -9,7 +9,7 @@ const PublicCameras = () => {
     const fetchCameras = async () => {
       try {
         // Fetch HTML via your proxy (not directly from EarthCam)
-        const proxyUrl = 'http://localhost:3001/api/cameras';
+        const proxyUrl = process.env.REACT_APP_PROXY_URL || 'http://localhost:3001/api/cameras';
         const response = await fetch(proxyUrl);
         
         if (!response.ok) {

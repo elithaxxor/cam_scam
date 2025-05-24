@@ -29,5 +29,7 @@ app.get('/api/cameras', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+// Allow the port to be configured via the PORT environment variable.
+// Default to 3001 so it aligns with the React app configuration.
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Proxy running on port ${PORT}`));
