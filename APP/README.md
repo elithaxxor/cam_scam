@@ -180,9 +180,9 @@ This Node.js server acts as a proxy to fetch camera data from a third-party webs
     node server.js
     ```
 
-2. The server will run on port 3000 by default. You can access the API endpoint at:
+2. The server will run on port **3001** by default. You can access the API endpoint at:
     ```
-    http://localhost:3000/api/cameras
+    http://localhost:3001/api/cameras
     ```
 
 ## API Endpoints
@@ -198,8 +198,12 @@ Fetches the HTML content from EarthCam's network page and returns it.
 
 ## Environment Variables
 
+
+- `PORT`: (Optional) Port number on which the server will run. Defaults to 3001.
+
 - `PORT`: (Optional) Port number on which the proxy server will run. Defaults to 3001.
 - `REACT_APP_PROXY_URL`: URL used by the React app to fetch camera data. Defaults to `http://localhost:3001/api/cameras`.
+
 
 ## Code Overview
 

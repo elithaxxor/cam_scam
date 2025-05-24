@@ -1,5 +1,10 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // Sanitize user input to prevent injection or malformed HTML.
+    $cameraIP = filter_input(INPUT_POST, "cameraIP", FILTER_SANITIZE_STRING);
+    $protocol = filter_input(INPUT_POST, "protocol", FILTER_SANITIZE_STRING);
+
     // Sanitize input to avoid HTML/JS injection
     $cameraIP = filter_input(INPUT_POST, 'cameraIP', FILTER_SANITIZE_STRING);
     $protocol = filter_input(INPUT_POST, 'protocol', FILTER_SANITIZE_STRING);
@@ -11,7 +16,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $cameraIPEscaped = htmlspecialchars($cameraIP, ENT_QUOTES, 'UTF-8');
+
     $url = "";
+
+    // Validate allowed protocols
+    $allowed = ["http", "rtsp", "rtmp", "hls"];
+    if (!in_array($protocol, $allowed, true)) {
+        $protocol = "http";
+    }
+
+    // Escape the IP for safe output
+    $cameraIP = htmlspecialchars($cameraIP, ENT_QUOTES, 'UTF-8');
 
     switch ($protocol) {
         case "http":
@@ -28,6 +43,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
     }
 
+
+    $escapedUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+    $escapedProtocol = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
+
+    echo "<h2>Live Feed from Camera:</h2>";
+    echo "<video width='600' controls>\n".
+         "    <source src='$escapedUrl' type='video/$escapedProtocol'>\n".
+
     $protocolEscaped = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
 
     echo "<h2>Live Feed from Camera:</h2>";
@@ -36,6 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo "<h2>Live Feed from Camera:</h2>";
     echo "<video width='600' controls>\n".
          "    <source src='$url' type='video/$protocol'>\n".
+
          "    Your browser does not support the video tag.\n".
          "</video>";
 }
