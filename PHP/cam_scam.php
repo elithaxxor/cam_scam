@@ -28,11 +28,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $safeUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
     $safeProtocol = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
+
+    // Map protocol/extension to correct MIME type
+    $mimeTypes = [
+        'mp4' => 'video/mp4',
+        'webm' => 'video/webm',
+        'ogg' => 'video/ogg',
+        'ogv' => 'video/ogg',
+        'mov' => 'video/quicktime',
+        'mkv' => 'video/x-matroska',
+        // Add more as needed
+    ];
+
+    $lowerProtocol = strtolower($protocol);
+    $mimeType = isset($mimeTypes[$lowerProtocol]) ? $mimeTypes[$lowerProtocol] : null;
+
     echo "<h2>Live Feed from Camera:</h2>";
-    echo "<video width='600' controls>\n".
-         "    <source src='$safeUrl' type='video/$safeProtocol'>\n".
-         "    Your browser does not support the video tag.\n".
-         "</video>";
+
+    if ($mimeType) {
+        echo "<video width='600' controls>\n".
+             "    <source src='$safeUrl' type='$mimeType'>\n".
+             "    Your browser does not support the video tag.\n".
+             "</video>";
+    } else {
+        // For unsupported protocols like RTMP/RTSP, suggest using a JS player
+        echo "<p><strong>Protocol '$safeProtocol' is not natively supported by HTML5 video.</strong></p>";
+        echo "<p>Consider using a JavaScript player library such as <a href='https://videojs.com/' target='_blank'>Video.js</a> or <a href='https://github.com/ant-media/StreamApp' target='_blank'>Ant Media StreamApp</a> for RTMP/RTSP streams.</p>";
+        // Optionally, you could include a JS player integration here
+    }
 }
 ?>
 <!DOCTYPE html>
