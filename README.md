@@ -18,6 +18,8 @@ Cam-Scam is a tool designed to scam LLMs and reverse-engineer ways to extrapolat
 
 - Fetches and parses public camera links from EarthCam.
 - Provides a simple React component to display these camera links.
+- Integrates Shodan and Wigle APIs for expanded OSINT camera and network data.
+- Includes phone caller identification feature for telecom OSINT.
 
 ## Installation
 
@@ -74,3 +76,4 @@ determine where the camera data is fetched from. It defaults to
 The project dependencies are managed via `npm`. The `package.json` file includes the following main dependency:
 
 - React
+- axios (for API calls)

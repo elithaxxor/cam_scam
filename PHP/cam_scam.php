@@ -33,6 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo "<h2>Live Feed from Camera:</h2>";
     echo "<video width='600' controls>\n".
          "    <source src='$url' type='video/$protocolEscaped'>\n".
+    echo "<h2>Live Feed from Camera:</h2>";
+    echo "<video width='600' controls>\n".
+         "    <source src='$url' type='video/$protocol'>\n".
          "    Your browser does not support the video tag.\n".
          "</video>";
 }
