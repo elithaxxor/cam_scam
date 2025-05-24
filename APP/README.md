@@ -199,10 +199,14 @@ Fetches the HTML content from EarthCam's network page and returns it.
 ## Environment Variables
 
 
+- `PORT`: (Optional) Port number on which the server will run. Defaults to **3001**.
+=======
+
 - `PORT`: (Optional) Port number on which the server will run. Defaults to 3001.
 
 - `PORT`: (Optional) Port number on which the proxy server will run. Defaults to 3001.
 - `REACT_APP_PROXY_URL`: URL used by the React app to fetch camera data. Defaults to `http://localhost:3001/api/cameras`.
+
 
 
 ## Code Overview
