@@ -49,9 +49,11 @@ app.get('/api/cameras', async (req, res) => {
 });
 
 
+
+
 // Allow the port to be configured via the PORT environment variable.
 // Default to 3001 so it matches the React app configuration.
-=======
+
 
 // Allow configuring the port via the PORT environment variable.
 // Default to 3001 so it matches the React component expectations.
@@ -59,6 +61,7 @@ app.get('/api/cameras', async (req, res) => {
 
 // Allow the port to be configured via the PORT environment variable.
 // Default to 3001 so it aligns with the React app configuration.
+
 
 
 const PORT = process.env.PORT || 3001;

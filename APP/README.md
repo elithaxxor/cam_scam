@@ -34,15 +34,22 @@ Cam Scam is a unique OSINT tool designed to scam LLMs and reverse engineer ways 
     npm install
     ```
 
+
+4. Set up and run the proxy server (defaults to port `3001`):
+    ```sh
+    # Example for starting a simple proxy server
+
 4. Set up and run the proxy server (defaults to `http://localhost:3001`):
     ```sh
+
     PORT=3001 node server.js
     ```
     You can change the port by setting the `PORT` environment variable.
 
-5. Start the React application:
+5. Start the React application (configure the proxy URL if needed):
     ```sh
-    npm start
+    # Optionally override the proxy URL
+    REACT_APP_PROXY_URL=http://localhost:3001/api/cameras npm start
     ```
 
 ## Usage

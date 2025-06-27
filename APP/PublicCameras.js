@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
 const PublicCameras = () => {
+
+  const [cameraLinks, setCameraLinks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
   const [activeTab, setActiveTab] = useState('earthcam');
 
   // EarthCam state
@@ -23,6 +29,7 @@ const PublicCameras = () => {
   const [phoneIdLoading, setPhoneIdLoading] = useState(false);
   const [phoneIdError, setPhoneIdError] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState('');
+
 
   useEffect(() => {
 
@@ -150,6 +157,34 @@ const PublicCameras = () => {
     }
   };
 
+
+  const filteredLinks = cameraLinks.filter(link =>
+    link.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Render states: loading, error, or success
+  return (
+    <div>
+      <h1>Public Cameras</h1>
+      <input
+        type="text"
+        placeholder="Search cameras"
+        value={searchTerm}
+        onChange={e => setSearchTerm(e.target.value)}
+      />
+      {loading && <p>Loading cameras...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {!loading && !error && (
+        <ul>
+          {filteredLinks.map((link, index) => (
+            <li key={index}>
+              <a href={link} target="_blank" rel="noopener noreferrer">
+                {link}
+              </a>
+            </li>
+          ))}
+        </ul>
+
   return (
     <div>
       <h1>Camera Finder & OSINT Tools</h1>
@@ -244,10 +279,11 @@ const PublicCameras = () => {
             </div>
           )}
         </div>
+
       )}
     </div>
   );
-};
+}; 
 
 export default PublicCameras;
 

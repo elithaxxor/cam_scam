@@ -1,6 +1,14 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    $cameraIP = filter_input(INPUT_POST, "cameraIP", FILTER_SANITIZE_STRING);
+    $protocol = filter_input(INPUT_POST, "protocol", FILTER_SANITIZE_STRING);
+    $allowed = ["http", "rtsp", "rtmp", "hls"];
+    if (!in_array($protocol, $allowed)) {
+        $protocol = "http";
+    }
+
+
     // Sanitize user inputs to avoid HTML injection and malformed URLs
     $cameraIP = filter_var($_POST["cameraIP"], FILTER_SANITIZE_STRING);
     $protocol = filter_var($_POST["protocol"], FILTER_SANITIZE_STRING);
@@ -29,6 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cameraIPEscaped = htmlspecialchars($cameraIP, ENT_QUOTES, 'UTF-8');
 
 
+
     $url = "";
 
     // Validate allowed protocols
@@ -54,6 +63,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $url = "http://$cameraIPEscaped/hls/stream.m3u8";
             break;
     }
+
+
+    $safeUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+    $safeProtocol = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
+    echo "<h2>Live Feed from Camera:</h2>";
+    echo "<video width='600' controls>\n".
+         "    <source src='$safeUrl' type='video/$safeProtocol'>\n".
+         "    Your browser does not support the video tag.\n".
+         "</video>";
 
 
     $safeUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
@@ -106,6 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
          "    Your browser does not support the video tag.\n".
          "</video>";
+
 
 }
 ?>
