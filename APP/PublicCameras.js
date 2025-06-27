@@ -32,13 +32,13 @@ const PublicCameras = () => {
 
 
   useEffect(() => {
-
     const fetchCameras = async () => {
       try {
         // Fetch HTML via your proxy (not directly from EarthCam)
-        const proxyUrl = process.env.REACT_APP_PROXY_URL || 'http://localhost:3001/api/cameras';
+        const proxyUrl = process.env.REACT_APP_PROXY_URL ||
+          'http://localhost:3001/api/cameras';
         const response = await fetch(proxyUrl);
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -47,7 +47,7 @@ const PublicCameras = () => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
 
-        // Extract camera links (same logic as before)
+        // Extract camera links
         const links = doc.querySelectorAll('a.cam_link');
         const urls = Array.from(links).map(link => link.href);
 
@@ -58,6 +58,10 @@ const PublicCameras = () => {
         setError('Failed to load cameras. Please try again later.');
       } finally {
         setLoading(false);
+      }
+    };
+
+    fetchCameras();
 
     if (activeTab === 'earthcam') {
       fetchEarthcam();
@@ -165,28 +169,6 @@ const PublicCameras = () => {
   // Render states: loading, error, or success
   return (
     <div>
-      <h1>Public Cameras</h1>
-      <input
-        type="text"
-        placeholder="Search cameras"
-        value={searchTerm}
-        onChange={e => setSearchTerm(e.target.value)}
-      />
-      {loading && <p>Loading cameras...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {!loading && !error && (
-        <ul>
-          {filteredLinks.map((link, index) => (
-            <li key={index}>
-              <a href={link} target="_blank" rel="noopener noreferrer">
-                {link}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-  return (
-    <div>
       <h1>Camera Finder & OSINT Tools</h1>
       <div style={{ marginBottom: '1rem' }}>
         <button onClick={() => setActiveTab('earthcam')} disabled={activeTab === 'earthcam'}>EarthCam</button>
@@ -284,7 +266,5 @@ const PublicCameras = () => {
     </div>
   );
 }; 
-
-export default PublicCameras;
 
 export default PublicCameras;
