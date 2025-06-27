@@ -1,34 +1,10 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    $cameraIP = filter_input(INPUT_POST, "cameraIP", FILTER_SANITIZE_STRING);
-    $protocol = filter_input(INPUT_POST, "protocol", FILTER_SANITIZE_STRING);
-    $allowed = ["http", "rtsp", "rtmp", "hls"];
-    if (!in_array($protocol, $allowed)) {
-        $protocol = "http";
-    }
-
-
-    // Sanitize user inputs to avoid HTML injection and malformed URLs
-    $cameraIP = filter_var($_POST["cameraIP"], FILTER_SANITIZE_STRING);
-    $protocol = filter_var($_POST["protocol"], FILTER_SANITIZE_STRING);
-
-    // Only allow expected protocols
-    $allowed = ["http", "rtsp", "rtmp", "hls"];
-    if (!in_array($protocol, $allowed)) {
-        $protocol = "http"; // fallback to a safe default
-    }
-
-
-    // Sanitize user input to prevent injection or malformed HTML.
-    $cameraIP = filter_input(INPUT_POST, "cameraIP", FILTER_SANITIZE_STRING);
-    $protocol = filter_input(INPUT_POST, "protocol", FILTER_SANITIZE_STRING);
-
-    // Sanitize input to avoid HTML/JS injection
+    // Sanitize user input
     $cameraIP = filter_input(INPUT_POST, 'cameraIP', FILTER_SANITIZE_STRING);
     $protocol = filter_input(INPUT_POST, 'protocol', FILTER_SANITIZE_STRING);
 
-    // Basic validation for allowed protocols
+    // Validate protocol against allowed list
     $allowed = ["http", "rtsp", "rtmp", "hls"];
     if (!in_array($protocol, $allowed, true)) {
         $protocol = "http";
@@ -36,18 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $cameraIPEscaped = htmlspecialchars($cameraIP, ENT_QUOTES, 'UTF-8');
 
-
-
     $url = "";
-
-    // Validate allowed protocols
-    $allowed = ["http", "rtsp", "rtmp", "hls"];
-    if (!in_array($protocol, $allowed, true)) {
-        $protocol = "http";
-    }
-
-    // Escape the IP for safe output
-    $cameraIP = htmlspecialchars($cameraIP, ENT_QUOTES, 'UTF-8');
 
     switch ($protocol) {
         case "http":
@@ -64,16 +29,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
     }
 
-
-    $safeUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
-    $safeProtocol = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
-    echo "<h2>Live Feed from Camera:</h2>";
-    echo "<video width='600' controls>\n".
-         "    <source src='$safeUrl' type='video/$safeProtocol'>\n".
-         "    Your browser does not support the video tag.\n".
-         "</video>";
-
-
     $safeUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
     $safeProtocol = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
 
@@ -88,8 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Add more as needed
     ];
 
-    $lowerProtocol = strtolower($protocol);
-    $mimeType = isset($mimeTypes[$lowerProtocol]) ? $mimeTypes[$lowerProtocol] : null;
+    $mimeType = $mimeTypes[strtolower($protocol)] ?? null;
 
     echo "<h2>Live Feed from Camera:</h2>";
 
@@ -102,28 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // For unsupported protocols like RTMP/RTSP, suggest using a JS player
         echo "<p><strong>Protocol '$safeProtocol' is not natively supported by HTML5 video.</strong></p>";
         echo "<p>Consider using a JavaScript player library such as <a href='https://videojs.com/' target='_blank'>Video.js</a> or <a href='https://github.com/ant-media/StreamApp' target='_blank'>Ant Media StreamApp</a> for RTMP/RTSP streams.</p>";
-        // Optionally, you could include a JS player integration here
     }
-
-
-    $escapedUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
-    $escapedProtocol = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
-
-    echo "<h2>Live Feed from Camera:</h2>";
-    echo "<video width='600' controls>\n".
-         "    <source src='$escapedUrl' type='video/$escapedProtocol'>\n".
-
-    $protocolEscaped = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
-
-    echo "<h2>Live Feed from Camera:</h2>";
-    echo "<video width='600' controls>\n".
-         "    <source src='$url' type='video/$protocolEscaped'>\n".
-    echo "<h2>Live Feed from Camera:</h2>";
-    echo "<video width='600' controls>\n".
-         "    <source src='$url' type='video/$protocol'>\n".
-
-         "    Your browser does not support the video tag.\n".
-         "</video>";
 
 
 }
