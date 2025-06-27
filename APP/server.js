@@ -29,17 +29,23 @@ async function fetchWithCache(key, fetchFunction) {
 app.get('/api/cameras', async (req, res) => {
   try {
     const data = await fetchWithCache('earthcam', async () => {
-      const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      });
-      const page = await browser.newPage();
-      await page.goto('https://www.earthcam.com/network/', {
-        waitUntil: 'networkidle2',
-      });
-      const html = await page.content();
-      await browser.close();
-      return html;
+      let browser;
+      try {
+        browser = await puppeteer.launch({
+          headless: true,
+          args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
+        const page = await browser.newPage();
+        await page.goto('https://www.earthcam.com/network/', {
+          waitUntil: 'networkidle2',
+        });
+        const html = await page.content();
+        return html;
+      } finally {
+        if (browser) {
+          await browser.close();
+        }
+      }
     });
     res.send(data);
   } catch (error) {
@@ -49,23 +55,6 @@ app.get('/api/cameras', async (req, res) => {
 });
 
 
-
-
-// Allow the port to be configured via the PORT environment variable.
-// Default to 3001 so it matches the React app configuration.
-
-
-// Allow configuring the port via the PORT environment variable.
-// Default to 3001 so it matches the React component expectations.
-
-
-// Allow the port to be configured via the PORT environment variable.
-// Default to 3001 so it aligns with the React app configuration.
-
-
-
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Proxy running on port ${PORT}`));
 
 // Shodan API endpoint with caching
 app.get('/api/shodan', async (req, res) => {
@@ -86,4 +75,42 @@ const basicAuth = require('basic-auth');
 
 const WIGLE_USERNAME = 'kXbnhyS8FUXZIm2ZNTHISmiYP8IHCUVD'; // Assuming username is the key provided
 const WIGLE_PASSWORD = 'kXbnhyS8FUXZIm2ZNTHISmiYP8IHCUVD'; // Assuming password is the same key for now
+
+// Wigle API endpoint with caching
+app.get('/api/wigle', async (req, res) => {
+  try {
+    const data = await fetchWithCache('wigle', async () => {
+      const auth = Buffer.from(`${WIGLE_USERNAME}:${WIGLE_PASSWORD}`).toString('base64');
+      const response = await axios.get('https://api.wigle.net/api/v2/network/search', {
+        headers: { Authorization: `Basic ${auth}` },
+        params: req.query,
+      });
+      return response.data.results || [];
+    });
+    res.json(data);
+  } catch (error) {
+    console.error('Wigle API error:', error);
+    res.status(500).json({ error: 'Failed to fetch Wigle data' });
+  }
+});
+
+// Phone ID endpoint
+app.get('/api/phoneid', async (req, res) => {
+  const number = req.query.number;
+  if (!number) {
+    return res.status(400).json({ error: 'Phone number is required' });
+  }
+  try {
+    const result = await identifyPhoneNumber(number);
+    res.json(result);
+  } catch (error) {
+    console.error('Phone ID error:', error);
+    res.status(500).json({ error: 'Failed to identify phone number' });
+  }
+});
+
+const PORT = process.env.PORT || 3001;
+const server = app.listen(PORT, () => console.log(`Proxy running on port ${PORT}`));
+
+module.exports = { app, server };
 
