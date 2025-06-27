@@ -31,10 +31,12 @@ To install and set up this project, follow these steps:
     cd cam_scam
     ```
 
-2. Install the required dependencies:
+2. Install the required dependencies using the provided setup script:
     ```sh
-    npm install
+    ./setup.sh
     ```
+
+   This script simply runs `npm install` for you.
 
 
 3. Start the proxy server (defaults to port `3001`):
@@ -78,9 +80,27 @@ The React components use the `REACT_APP_PROXY_URL` environment variable to
 determine where the camera data is fetched from. It defaults to
 `http://localhost:3001/api/cameras` if not specified.
 
+### Running Tests
+
+After installing dependencies you can run the test suite with:
+
+```sh
+npm test
+```
+
 ## Dependencies
 
 The project dependencies are managed via `npm`. The `package.json` file includes the following main dependency:
 
 - React
 - axios (for API calls)
+
+## Testing
+
+After installing dependencies, run the test suite with:
+
+```sh
+npm test
+```
+
+This project uses Jest for unit testing. All tests can be found in the `__tests__` directory.

@@ -7,12 +7,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Validate protocol
     $allowed = ['http', 'rtsp', 'rtmp', 'hls'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Sanitize user input
+    $cameraIP = filter_input(INPUT_POST, 'cameraIP', FILTER_SANITIZE_STRING);
+    $protocol = filter_input(INPUT_POST, 'protocol', FILTER_SANITIZE_STRING);
+
+    // Validate protocol against allowed list
+    $allowed = ["http", "rtsp", "rtmp", "hls"];
     if (!in_array($protocol, $allowed, true)) {
         $protocol = 'http';
     }
 
     // Escape for output
     $cameraIPEscaped = htmlspecialchars($cameraIP, ENT_QUOTES, 'UTF-8');
+
+    $url = "";
 
     switch ($protocol) {
         case 'http':
@@ -38,6 +47,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     ];
     $mimeType = $mimeTypes[$protocol] ?? null;
 
+    $mimeType = $mimeTypes[strtolower($protocol)] ?? null;
+
+    echo "<h2>Live Feed from Camera:</h2>";
+
     if ($mimeType) {
         $videoOutput = "<h2>Live Feed from Camera:</h2>";
         $videoOutput .= "<video width='600' controls>";
@@ -49,6 +62,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $videoOutput = "<p><strong>Protocol '$safeProtocol' is not natively supported by HTML5 video.</strong></p>";
         $videoOutput .= "<p>Consider using a JavaScript player like <a href='https://videojs.com/' target='_blank'>Video.js</a>.</p>";
     }
+
+        // For unsupported protocols like RTMP/RTSP, suggest using a JS player
+        echo "<p><strong>Protocol '$safeProtocol' is not natively supported by HTML5 video.</strong></p>";
+        echo "<p>Consider using a JavaScript player library such as <a href='https://videojs.com/' target='_blank'>Video.js</a> or <a href='https://github.com/ant-media/StreamApp' target='_blank'>Ant Media StreamApp</a> for RTMP/RTSP streams.</p>";
+    }
+
+
 }
 ?>
 <!DOCTYPE html>
