@@ -33,7 +33,7 @@ To install and set up this project, follow these steps:
 
 2. Install the required dependencies:
     ```sh
-    npm install
+    ./setup.sh
     ```
 
 
@@ -77,6 +77,14 @@ npm start
 The React components use the `REACT_APP_PROXY_URL` environment variable to
 determine where the camera data is fetched from. It defaults to
 `http://localhost:3001/api/cameras` if not specified.
+
+### Running Tests
+
+After installing dependencies you can run the test suite with:
+
+```sh
+npm test
+```
 
 ## Dependencies
 
