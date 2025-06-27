@@ -80,6 +80,14 @@ The React components use the `REACT_APP_PROXY_URL` environment variable to
 determine where the camera data is fetched from. It defaults to
 `http://localhost:3001/api/cameras` if not specified.
 
+### Running Tests
+
+After installing dependencies you can run the test suite with:
+
+```sh
+npm test
+```
+
 ## Dependencies
 
 The project dependencies are managed via `npm`. The `package.json` file includes the following main dependency:
