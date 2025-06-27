@@ -1,131 +1,54 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    $cameraIP = filter_input(INPUT_POST, "cameraIP", FILTER_SANITIZE_STRING);
-    $protocol = filter_input(INPUT_POST, "protocol", FILTER_SANITIZE_STRING);
-    $allowed = ["http", "rtsp", "rtmp", "hls"];
-    if (!in_array($protocol, $allowed)) {
-        $protocol = "http";
-    }
-
-
-    // Sanitize user inputs to avoid HTML injection and malformed URLs
-    $cameraIP = filter_var($_POST["cameraIP"], FILTER_SANITIZE_STRING);
-    $protocol = filter_var($_POST["protocol"], FILTER_SANITIZE_STRING);
-
-    // Only allow expected protocols
-    $allowed = ["http", "rtsp", "rtmp", "hls"];
-    if (!in_array($protocol, $allowed)) {
-        $protocol = "http"; // fallback to a safe default
-    }
-
-
-    // Sanitize user input to prevent injection or malformed HTML.
-    $cameraIP = filter_input(INPUT_POST, "cameraIP", FILTER_SANITIZE_STRING);
-    $protocol = filter_input(INPUT_POST, "protocol", FILTER_SANITIZE_STRING);
-
-    // Sanitize input to avoid HTML/JS injection
+$videoOutput = '';
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Sanitize inputs
     $cameraIP = filter_input(INPUT_POST, 'cameraIP', FILTER_SANITIZE_STRING);
     $protocol = filter_input(INPUT_POST, 'protocol', FILTER_SANITIZE_STRING);
 
-    // Basic validation for allowed protocols
-    $allowed = ["http", "rtsp", "rtmp", "hls"];
+    // Validate protocol
+    $allowed = ['http', 'rtsp', 'rtmp', 'hls'];
     if (!in_array($protocol, $allowed, true)) {
-        $protocol = "http";
+        $protocol = 'http';
     }
 
+    // Escape for output
     $cameraIPEscaped = htmlspecialchars($cameraIP, ENT_QUOTES, 'UTF-8');
 
-
-
-    $url = "";
-
-    // Validate allowed protocols
-    $allowed = ["http", "rtsp", "rtmp", "hls"];
-    if (!in_array($protocol, $allowed, true)) {
-        $protocol = "http";
-    }
-
-    // Escape the IP for safe output
-    $cameraIP = htmlspecialchars($cameraIP, ENT_QUOTES, 'UTF-8');
-
     switch ($protocol) {
-        case "http":
+        case 'http':
             $url = "http://$cameraIPEscaped";
             break;
-        case "rtsp":
+        case 'rtsp':
             $url = "rtsp://$cameraIPEscaped:554/stream";
             break;
-        case "rtmp":
+        case 'rtmp':
             $url = "rtmp://$cameraIPEscaped/live/stream";
             break;
-        case "hls":
+        case 'hls':
             $url = "http://$cameraIPEscaped/hls/stream.m3u8";
             break;
     }
 
-
     $safeUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
-    $safeProtocol = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
-    echo "<h2>Live Feed from Camera:</h2>";
-    echo "<video width='600' controls>\n".
-         "    <source src='$safeUrl' type='video/$safeProtocol'>\n".
-         "    Your browser does not support the video tag.\n".
-         "</video>";
 
-
-    $safeUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
-    $safeProtocol = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
-
-    // Map protocol/extension to correct MIME type
+    // Basic mapping for MIME types
     $mimeTypes = [
-        'mp4' => 'video/mp4',
-        'webm' => 'video/webm',
-        'ogg' => 'video/ogg',
-        'ogv' => 'video/ogg',
-        'mov' => 'video/quicktime',
-        'mkv' => 'video/x-matroska',
-        // Add more as needed
+        'http' => 'video/mp4',
+        'hls'  => 'application/vnd.apple.mpegurl',
     ];
-
-    $lowerProtocol = strtolower($protocol);
-    $mimeType = isset($mimeTypes[$lowerProtocol]) ? $mimeTypes[$lowerProtocol] : null;
-
-    echo "<h2>Live Feed from Camera:</h2>";
+    $mimeType = $mimeTypes[$protocol] ?? null;
 
     if ($mimeType) {
-        echo "<video width='600' controls>\n".
-             "    <source src='$safeUrl' type='$mimeType'>\n".
-             "    Your browser does not support the video tag.\n".
-             "</video>";
+        $videoOutput = "<h2>Live Feed from Camera:</h2>";
+        $videoOutput .= "<video width='600' controls>";
+        $videoOutput .= "<source src='$safeUrl' type='$mimeType'>";
+        $videoOutput .= "Your browser does not support the video tag.";
+        $videoOutput .= "</video>";
     } else {
-        // For unsupported protocols like RTMP/RTSP, suggest using a JS player
-        echo "<p><strong>Protocol '$safeProtocol' is not natively supported by HTML5 video.</strong></p>";
-        echo "<p>Consider using a JavaScript player library such as <a href='https://videojs.com/' target='_blank'>Video.js</a> or <a href='https://github.com/ant-media/StreamApp' target='_blank'>Ant Media StreamApp</a> for RTMP/RTSP streams.</p>";
-        // Optionally, you could include a JS player integration here
+        $safeProtocol = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
+        $videoOutput = "<p><strong>Protocol '$safeProtocol' is not natively supported by HTML5 video.</strong></p>";
+        $videoOutput .= "<p>Consider using a JavaScript player like <a href='https://videojs.com/' target='_blank'>Video.js</a>.</p>";
     }
-
-
-    $escapedUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
-    $escapedProtocol = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
-
-    echo "<h2>Live Feed from Camera:</h2>";
-    echo "<video width='600' controls>\n".
-         "    <source src='$escapedUrl' type='video/$escapedProtocol'>\n".
-
-    $protocolEscaped = htmlspecialchars($protocol, ENT_QUOTES, 'UTF-8');
-
-    echo "<h2>Live Feed from Camera:</h2>";
-    echo "<video width='600' controls>\n".
-         "    <source src='$url' type='video/$protocolEscaped'>\n".
-    echo "<h2>Live Feed from Camera:</h2>";
-    echo "<video width='600' controls>\n".
-         "    <source src='$url' type='video/$protocol'>\n".
-
-         "    Your browser does not support the video tag.\n".
-         "</video>";
-
-
 }
 ?>
 <!DOCTYPE html>
@@ -174,6 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="container">
         <h1>Access Hidden Camera</h1>
+        <?php echo $videoOutput; ?>
         <form method="post">
             <label for="cameraIP">Camera IP:</label>
             <input type="text" id="cameraIP" name="cameraIP" placeholder="Enter Camera IP" required>
@@ -189,4 +113,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </body>
 </html>
-
