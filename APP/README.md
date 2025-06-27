@@ -34,11 +34,17 @@ Cam Scam is a unique OSINT tool designed to scam LLMs and reverse engineer ways 
     npm install
     ```
 
+
 4. Set up and run the proxy server (defaults to port `3001`):
     ```sh
     # Example for starting a simple proxy server
+
+4. Set up and run the proxy server (defaults to `http://localhost:3001`):
+    ```sh
+
     PORT=3001 node server.js
     ```
+    You can change the port by setting the `PORT` environment variable.
 
 5. Start the React application (configure the proxy URL if needed):
     ```sh
@@ -74,7 +80,7 @@ const PublicCameras = () => {
     const fetchCameras = async () => {
       try {
         // Fetch HTML via your proxy (not directly from EarthCam)
-        const proxyUrl = 'http://localhost:3001/api/cameras';
+        const proxyUrl = process.env.REACT_APP_PROXY_URL || 'http://localhost:3001/api/cameras';
         const response = await fetch(proxyUrl);
         
         if (!response.ok) {
@@ -181,9 +187,9 @@ This Node.js server acts as a proxy to fetch camera data from a third-party webs
     node server.js
     ```
 
-2. The server will run on port 3000 by default. You can access the API endpoint at:
+2. The server will run on port **3001** by default. You can access the API endpoint at:
     ```
-    http://localhost:3000/api/cameras
+    http://localhost:3001/api/cameras
     ```
 
 ## API Endpoints
@@ -199,7 +205,16 @@ Fetches the HTML content from EarthCam's network page and returns it.
 
 ## Environment Variables
 
-- `PORT`: (Optional) Port number on which the server will run. Defaults to 3000.
+
+- `PORT`: (Optional) Port number on which the server will run. Defaults to **3001**.
+=======
+
+- `PORT`: (Optional) Port number on which the server will run. Defaults to 3001.
+
+- `PORT`: (Optional) Port number on which the proxy server will run. Defaults to 3001.
+- `REACT_APP_PROXY_URL`: URL used by the React app to fetch camera data. Defaults to `http://localhost:3001/api/cameras`.
+
+
 
 ## Code Overview
 
@@ -247,6 +262,6 @@ app.get('/api/cameras', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Proxy running on port ${PORT}`));
 ```

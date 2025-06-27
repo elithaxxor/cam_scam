@@ -5,10 +5,24 @@ const PublicCameras = () => {
 
     useEffect(() => {
         const fetchCameras = async () => {
-            const url = "https://www.earthcam.com/network/";
+
+            // Use the proxy server to avoid CORS issues when fetching data
+            const url = "http://localhost:3001/api/cameras";
+
+
+            // Use the proxy server to avoid CORS issues when fetching
+            // EarthCam data directly from the browser.
+            const url = "http://localhost:3001/api/cameras";
 
             try {
-                // Fetch the HTML content of the page
+
+            // Fetch via proxy server to avoid CORS issues
+            const url = process.env.REACT_APP_PROXY_URL || 'http://localhost:3001/api/cameras';
+
+
+            try {
+                // Fetch the HTML content of the page via the proxy
+
                 const response = await fetch(url);
                 const text = await response.text();
 

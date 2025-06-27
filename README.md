@@ -18,6 +18,8 @@ Cam-Scam is a tool designed to scam LLMs and reverse-engineer ways to extrapolat
 
 - Fetches and parses public camera links from EarthCam.
 - Provides a simple React component to display these camera links.
+- Integrates Shodan and Wigle APIs for expanded OSINT camera and network data.
+- Includes phone caller identification feature for telecom OSINT.
 
 ## Installation
 
@@ -34,10 +36,19 @@ To install and set up this project, follow these steps:
     npm install
     ```
 
+
 3. Start the proxy server (defaults to port `3001`):
+
+3. Start the proxy server (defaults to port 3001):
+
     ```sh
     PORT=3001 node APP/server.js
     ```
+
+
+
+   You can configure a different port by setting the `PORT` environment variable.
+
 
 ## Usage
 
@@ -58,13 +69,18 @@ function App() {
 export default App;
 ```
 
-Run the application:
+Run the application (ensure the proxy server is also running):
 ```sh
 npm start
 ```
+
+The React components use the `REACT_APP_PROXY_URL` environment variable to
+determine where the camera data is fetched from. It defaults to
+`http://localhost:3001/api/cameras` if not specified.
 
 ## Dependencies
 
 The project dependencies are managed via `npm`. The `package.json` file includes the following main dependency:
 
 - React
+- axios (for API calls)
