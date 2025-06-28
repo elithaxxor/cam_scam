@@ -9,8 +9,7 @@ const { identifyPhoneNumber } = require('./services/phoneService');
 const app = express();
 app.use(cors());
 
-const SHODAN_API_KEY = 'kXbnhyS8FUXZIm2ZNTHISmiYP8IHCUVD';
-const WIGLE_API_KEY = 'kXbnhyS8FUXZIm2ZNTHISmiYP8IHCUVD';
+const SHODAN_API_KEY = process.env.SHODAN_API_KEY || '';
 
 // Cache TTL in seconds
 const CACHE_TTL = 300;
@@ -71,10 +70,9 @@ app.get('/api/shodan', async (req, res) => {
   }
 });
 
-const basicAuth = require('basic-auth');
 
-const WIGLE_USERNAME = 'kXbnhyS8FUXZIm2ZNTHISmiYP8IHCUVD'; // Assuming username is the key provided
-const WIGLE_PASSWORD = 'kXbnhyS8FUXZIm2ZNTHISmiYP8IHCUVD'; // Assuming password is the same key for now
+const WIGLE_USERNAME = process.env.WIGLE_USERNAME || '';
+const WIGLE_PASSWORD = process.env.WIGLE_PASSWORD || '';
 
 // Wigle API endpoint with caching
 app.get('/api/wigle', async (req, res) => {

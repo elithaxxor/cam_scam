@@ -31,17 +31,18 @@ To install and set up this project, follow these steps:
     cd cam_scam
     ```
 
-2. Install the required dependencies using the provided setup script:
+2. Install the required dependencies:
     ```sh
+    # run the helper script or npm install directly
     ./setup.sh
+    # or
+    npm install
     ```
 
-   This script simply runs `npm install` for you.
+   The `setup.sh` script simply executes `npm install` for convenience.
 
 
 3. Start the proxy server (defaults to port `3001`):
-
-3. Start the proxy server (defaults to port 3001):
 
     ```sh
     PORT=3001 node APP/server.js
@@ -142,3 +143,5 @@ Feel free to open issues or submit pull requests to improve the project. Please 
 
 This project is licensed under the MIT License.
 ```
+This project uses Jest for unit testing. Running `npm test` executes
+`publicCameras.test.js` and `server.test.js` from the `__tests__` directory.
