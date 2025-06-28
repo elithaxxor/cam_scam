@@ -29,3 +29,14 @@ The following ideas could further enhance the Cam-Scam project:
    - Include edge cases and error-handling scenarios.
 
 These features would provide a more complete OSINT toolkit and help validate the application's core functionality.
+
+## Additional Ideas
+
+4. **Real-Time Notifications**
+   - Send alerts when new cameras or network devices are discovered.
+
+5. **Browser Extension**
+   - Offer a lightweight extension to quickly scan visited pages for public camera links.
+
+6. **Plugin Architecture**
+   - Allow third-party modules to extend scanning capabilities without modifying the core codebase.
