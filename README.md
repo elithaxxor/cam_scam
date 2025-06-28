@@ -104,3 +104,41 @@ npm test
 ```
 
 This project uses Jest for unit testing. All tests can be found in the `__tests__` directory.
+
+## Running the PHP Script
+
+1. Navigate to the `PHP` directory.
+2. Start a PHP development server:
+   ```sh
+   php -S localhost:8000
+   ```
+3. Open `http://localhost:8000/cam_scam.php` in your browser.
+
+## Running the Proxy Server
+
+1. From the project root, run the server (defaults to port `3001`):
+   ```sh
+   PORT=3001 node APP/server.js
+   ```
+   Use the `PORT` variable to change the port if needed.
+
+## Running the React Client
+
+1. Ensure dependencies are installed.
+   ```sh
+   npm install
+   ```
+2. Start the React development server:
+   ```sh
+   npm start
+   ```
+   The client will use `REACT_APP_PROXY_URL` to reach the proxy server.
+
+## Contributing
+
+Feel free to open issues or submit pull requests to improve the project. Please include tests for new features when possible.
+
+## License
+
+This project is licensed under the MIT License.
+```
