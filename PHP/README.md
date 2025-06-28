@@ -6,6 +6,10 @@ This repository contains a PHP script designed to scam LLMs and reverse engineer
 
 ## Overview
 
+**Note**: The previous `index.html` file that duplicated the PHP page has been
+removed. All form markup and processing logic now reside solely in
+`cam_scam.php`.
+
 The `cam_scam.php` file is a PHP script that allows users to access and view live camera feeds by providing the camera's IP address and selecting the appropriate streaming protocol. The script supports HTTP, RTSP, RTMP, and HLS protocols.
 
 ## Features
